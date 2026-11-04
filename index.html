@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diwali Party | Unrest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0C0806;--bg2:#160E09;--cream:#F8EBD3;--gold:#F4B544;--fire:#FF8A1F;--mute:#9A8B78;--line:#2A1F17;--f:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit;margin:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font:400 1rem/1.6 var(--f);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--bg)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+a{color:inherit;text-decoration:none}
+.serif{font-family:var(--f);font-weight:700}
+.lb{font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:54px;padding:0 34px;border:1px solid var(--gold);border-radius:99px;background:var(--gold);color:var(--bg);font:600 .95rem var(--f);cursor:pointer;transition:box-shadow .4s,background .3s,color .3s,transform .3s}
+.btn:hover{box-shadow:0 0 50px -6px rgba(255,138,31,.75);transform:translateY(-2px)}
+.btn.g{background:transparent;color:var(--cream);border-color:#4a3b2c}
+.btn.g:hover{border-color:var(--gold);color:var(--gold)}
+.btn:disabled{opacity:.5;cursor:default}
+.bts{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:560px){.bts{flex-direction:column}.bts .btn{width:100%}}
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;padding:26px clamp(20px,4vw,48px) 36px;overflow:hidden;isolation:isolate}
+.hero>*{position:relative;z-index:2}
+.brand{font:800 1.35rem var(--f);letter-spacing:-.02em}
+.stage{flex:1;display:grid;grid-template-columns:1fr;align-items:center;gap:36px;padding:6vh 0 2vh}
+@media(min-width:900px){.stage{grid-template-columns:1.4fr .6fr}}
+.txt{text-align:left}
+.big{width:clamp(180px,30vw,300px);justify-self:center}
+.meta{margin-top:22px;font-size:clamp(.95rem,2vw,1.1rem);color:rgba(248,235,211,.85);opacity:0;transition:opacity 2s ease 2.4s}
+.lit .meta,.lit .cta,.lit .cd,.lit .cnt{opacity:1}
+.cta{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;opacity:0;transition:opacity 2s ease 2.9s}
+.cta p{max-width:26em;font-size:.85rem;color:var(--mute)}
+.cd{margin-top:30px;display:flex;gap:clamp(18px,4vw,36px);opacity:0;transition:opacity 2s ease 3.2s}
+.cd b{display:block;font:700 clamp(1.9rem,5vw,2.6rem)/1 var(--f);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cd i{font-style:normal;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+/* college banner */
+.mq{display:grid;gap:12px;margin:14px calc(clamp(20px,4vw,48px)*-1) 0;opacity:0;transition:opacity 2s ease 3.4s;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.lit .mq{opacity:1}
+.tr{display:flex;overflow:hidden}
+.tk{display:flex;flex:none;animation:mv 60s linear infinite}
+.tr.b .tk{animation-direction:reverse;animation-duration:72s}
+.mq:hover .tk{animation-play-state:paused}
+@keyframes mv{to{transform:translateX(-100%)}}
+.ck{flex:none;display:flex;align-items:center;gap:28px;padding-right:28px;font:600 .8rem var(--f);letter-spacing:.16em;text-transform:uppercase;color:var(--mute);white-space:nowrap;transition:color .3s}
+.ck::after{content:"";width:3px;height:3px;border-radius:50%;background:#4a3b2c}
+.ck:hover{color:var(--gold)}
+@media(prefers-reduced-motion:reduce){.mq{opacity:1}.tk+.tk{display:none}.tr{overflow:visible}.tk{flex-wrap:wrap;padding:0}}
+/* diya */
+.diya{display:block;width:100%;height:auto;overflow:visible}
+.diya .fl{opacity:0;transform:scale(.05);transform-box:fill-box;transform-origin:50% 100%;transition:opacity 1.6s ease,transform 2.2s cubic-bezier(.22,1,.36,1)}
+.diya.on .fl{opacity:1;transform:scale(1);animation:flick 2.6s ease-in-out 2.2s infinite}
+.diya .core{animation:flick2 1.7s ease-in-out infinite alternate}
+@keyframes flick{0%,100%{transform:scale(1,1) skewX(0)}20%{transform:scale(.96,1.05) skewX(2.5deg)}45%{transform:scale(1.03,.97) skewX(-2deg)}70%{transform:scale(.98,1.04) skewX(1.5deg)}}
+@keyframes flick2{from{opacity:.85}to{opacity:1}}
+.diya .halo{opacity:0;transition:opacity 2.5s ease}
+.diya.on .halo{opacity:1;animation:halo 3s ease-in-out 2s infinite}
+@keyframes halo{50%{opacity:.7}}
+.diya .smoke{opacity:0}
+.diya.on .smoke{animation:smoke 5s ease-out 3s infinite}
+@keyframes smoke{0%{opacity:0;transform:translateY(0)}20%{opacity:.35}100%{opacity:0;transform:translateY(-34px)}}
+/* heading */
+.eyebrow{margin-bottom:20px;color:var(--gold);animation:fu 1s ease .15s both}
+h1{font:800 clamp(3.2rem,9.5vw,7rem)/.98 var(--f);letter-spacing:-.04em}
+.wd{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .02em .14em;margin-right:.18em}
+.wd>span{display:inline-block;animation:wr 1.1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i)*60ms + .4s)}
+@keyframes wr{from{transform:translateY(115%) rotate(6deg);opacity:0;filter:blur(8px)}}
+.fire>span{color:var(--gold)}
+.fire{animation:gl 3s ease-in-out 2s infinite alternate}
+@keyframes gl{from{filter:drop-shadow(0 0 0 rgba(255,138,31,0))}to{filter:drop-shadow(0 0 24px rgba(255,138,31,.65))}}
+.tag{margin-top:22px;font:500 clamp(1.05rem,2.4vw,1.35rem)/1.4 var(--f);color:var(--gold);animation:fu 1.2s ease 1.9s both}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}}
+.cnt{margin-top:26px;display:flex;align-items:baseline;gap:14px;opacity:0;transition:opacity 2s ease 3s}
+.cnt b{font:700 clamp(1.4rem,3.2vw,1.8rem)/1 var(--f);color:var(--gold);font-variant-numeric:tabular-nums;display:inline-block}
+.cnt b.bump{animation:bump .7s cubic-bezier(.22,1,.36,1)}
+@keyframes bump{40%{transform:translateY(-6px) scale(1.12);text-shadow:0 0 30px var(--fire)}}
+.cnt span{display:inline-flex;align-items:center;gap:8px;color:var(--mute);font-size:.9rem}
+.cnt i{width:7px;height:7px;border-radius:50%;background:var(--fire);box-shadow:0 0 10px 2px var(--fire);animation:lv 2s ease-in-out infinite}
+@keyframes lv{50%{opacity:.3}}
+/* details */
+.wrap{max-width:960px;margin:0 auto;padding:clamp(70px,11vw,120px) clamp(20px,4vw,40px)}
+dl{border-top:1px solid var(--line)}
+.row{display:grid;gap:2px;padding:26px 0;border-bottom:1px solid var(--line)}
+.row dd{font:700 clamp(1.6rem,4.2vw,2.5rem)/1.15 var(--f);letter-spacing:-.025em}
+@media(min-width:768px){.row{grid-template-columns:220px 1fr;align-items:baseline}}
+/* scroll reveal */
+.rv{opacity:0;transform:translateY(44px);filter:blur(6px);transition:opacity .9s ease,transform 1s cubic-bezier(.22,1,.36,1),filter .9s ease}
+.rv.in{opacity:1;transform:none;filter:none}
+.row.rv{transform:translateX(-36px)}.row.rv.in{transform:none}
+/* forms */
+.sec{max-width:760px;margin:0 auto;padding:clamp(56px,9vw,96px) clamp(20px,4vw,40px)}
+.sec h2{font:800 clamp(2.2rem,6.5vw,3.8rem)/1.02 var(--f);letter-spacing:-.035em;margin:10px 0 14px}
+.sub{max-width:30em;margin-bottom:36px;font-size:.95rem;color:var(--mute)}
+form{display:grid;gap:34px}
+label.lb,legend.lb{display:block}
+input[type=text]{width:100%;margin-top:6px;padding:12px 0;border:0;border-bottom:1px solid #3a2c20;border-radius:0;background:transparent;color:var(--cream);font:inherit;font-size:1.05rem;outline:none;transition:border-color .3s}
+input::placeholder{color:#5a4a3a}input[type=text]:focus,input[aria-invalid=true]{border-color:var(--gold)}
+fieldset{border:0;padding:0;min-width:0}
+.yr{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.yr label{cursor:pointer}.yr input{position:absolute;opacity:0;width:0;height:0}
+.yr span{display:inline-block;padding:10px 18px;border:1px solid #3a2c20;border-radius:99px;font-size:.9rem;color:var(--mute);transition:all .3s}
+.yr label:hover span{border-color:var(--gold);color:var(--cream)}
+.yr input:checked+span{background:var(--gold);border-color:var(--gold);color:var(--bg);box-shadow:0 0 30px -6px var(--fire)}
+.yr input:focus-visible+span{outline:2px solid var(--gold);outline-offset:3px}
+.er{margin-top:8px;font-size:.875rem;color:var(--fire)}
+.note{margin-top:14px;font-size:.875rem;color:var(--mute)}
+.sub .pr{font-weight:600;color:var(--gold)}
+.look{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}.look .fld{flex:1 1 260px;min-width:0}
+.pf{display:flex;align-items:center;gap:12px;margin-top:6px;border-bottom:1px solid #3a2c20;transition:border-color .3s}
+.pf:focus-within,.pf.bad{border-color:var(--gold)}
+.pf b{font-weight:500;color:var(--mute)}.pf input[type=text]{flex:1;margin:0;border:0;letter-spacing:.05em}
+#res{margin-top:34px;outline:none}
+.msg{max-width:30em;padding:26px;border:1px solid var(--line);border-radius:18px}
+.msg h3{font:700 1.6rem/1.15 var(--f);letter-spacing:-.02em}.msg p{margin-top:10px;font-size:.95rem;color:rgba(248,235,211,.75)}
+.msg a{display:inline-block;margin-top:14px;color:var(--gold);border-bottom:1px solid currentColor}
+.dm{margin-top:14px;font-size:.75rem;color:#5a4a3a}
+.box{border:1px solid var(--line);border-radius:22px;padding:clamp(28px,5vw,48px)}
+.box h2{margin:0}
+/* invite pass */
+.pass{position:relative;max-width:400px;overflow:hidden;border:1px solid #4a3b2c;border-radius:22px;background:linear-gradient(170deg,#1d130b,#0f0a07 65%);box-shadow:0 40px 90px -40px rgba(255,138,31,.5);animation:pin 1.2s cubic-bezier(.22,1,.36,1) both}
+@keyframes pin{from{opacity:0;transform:translateY(26px) scale(.97);filter:blur(8px)}}
+.pass .ph{padding:26px 26px 6px;display:flex;justify-content:space-between;align-items:flex-start}
+.pass .pd{width:64px;flex:none}
+.pass .pt{font:800 2.5rem/.98 var(--f);letter-spacing:-.035em}.pass .pt em{color:var(--gold);font-style:normal}
+.pb{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;padding:18px 26px 22px}
+.pb .w2{grid-column:1/-1}.pb dt{margin-bottom:2px}.pb dd{font-weight:500;overflow-wrap:anywhere}
+.pb .nm{font:700 1.8rem/1.1 var(--f);letter-spacing:-.025em}
+.pass .ps{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 26px 24px;border-top:1px dashed #4a3b2c}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid rgba(244,181,68,.5);border-radius:99px;font-size:.78rem;font-weight:600;color:var(--gold)}
+.chip i{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px 2px var(--fire)}
+.pass .pa{padding:0 26px 26px}
+footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font-size:.8rem;color:var(--mute)}
+/* sound */
+.snd{position:fixed;z-index:70;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,calc(env(safe-area-inset-bottom,0px) + 8px));display:inline-flex;align-items:center;gap:12px;height:44px;padding:0 18px 0 16px;border:1px solid var(--line);border-radius:99px;background:rgba(12,8,6,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--cream);cursor:pointer;transition:border-color .3s}
+.snd:hover,.snd.on{border-color:rgba(244,181,68,.6)}
+.snd.wait{border-color:var(--gold);animation:sp 2s ease-out infinite}
+@keyframes sp{from{box-shadow:0 0 0 0 rgba(244,181,68,.45)}to{box-shadow:0 0 0 14px rgba(244,181,68,0)}}
+.snd .lb{color:var(--cream);min-width:11ch;text-align:left;letter-spacing:.08em}
+.eq{display:flex;align-items:center;gap:2px;height:16px}
+.eq i{display:block;width:3px;height:100%;border-radius:2px;background:var(--mute);transform:scaleY(.18)}
+.snd.on .eq i{background:var(--gold);animation:eq .9s ease-in-out infinite alternate}
+.snd.on .eq i:nth-child(2){animation-duration:.65s}.snd.on .eq i:nth-child(3){animation-duration:1.1s}.snd.on .eq i:nth-child(4){animation-duration:.75s}
+@keyframes eq{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important}.rv,.meta,.cta,.cd,.cnt{opacity:1;transform:none;filter:none}.diya .fl{opacity:1;transform:none}.diya .halo{opacity:1}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero" id="hero">
+ <header><span class="brand">Unrest</span></header>
+ <div class="stage">
+  <div class="txt">
+   <p class="lb eyebrow">Invite only &middot; Delhi college students</p>
+   <h1 id="ttl" aria-label="Unrest Diwali Party">Unrest Diwali Party</h1>
+   <p class="tag">That one college Diwali party you&rsquo;ll never forget.</p>
+   <p class="meta">Saturday, 7 November 2026, 3:00 PM to 8:00 PM<br>Civil Lines, New Delhi</p>
+   <div class="cnt" id="cnt"><b id="cn" aria-live="polite">7</b><span><i></i>invites requested so far</span></div>
+   <div class="cta"><div class="bts"><a class="btn" href="#request">Request your invite</a><a class="btn g" href="#invite">Check my invite</a></div><p>Invitations are confirmed after approval.</p></div>
+   <div class="cd" id="cd" aria-label="Time until the party" hidden></div>
+  </div>
+  <div class="big" id="big" aria-hidden="true"></div>
+ </div>
+ <div class="mq" id="mq" aria-hidden="true"></div>
+</section>
+
+<section class="wrap"><dl>
+ <div class="row rv"><dt class="lb">Event</dt><dd>Unrest Diwali Party</dd></div>
+ <div class="row rv"><dt class="lb">Date</dt><dd>Saturday, 7 November 2026</dd></div>
+ <div class="row rv"><dt class="lb">Time</dt><dd>3:00 PM to 8:00 PM</dd></div>
+ <div class="row rv"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div>
+</dl></section>
+
+<section id="request" class="sec"><p class="lb rv">Request access</p><h2 class="rv">Request your invite</h2>
+ <p class="sub rv"><span class="pr">Passes start at ₹699.</span> Payment opens as soon as your invite is approved.</p>
+ <div id="fw"><form id="f" novalidate>
+  <div class="rv"><label class="lb" for="n">Full name</label><input type="text" id="n" placeholder="As on your college ID" autocomplete="name"><p class="er" id="en" role="alert" hidden></p></div>
+  <div class="rv"><label class="lb" for="i">Instagram username</label><input type="text" id="i" placeholder="@username" autocapitalize="none"><p class="er" id="ei" role="alert" hidden></p></div>
+  <div class="rv"><label class="lb" for="p">Contact number</label><input type="text" id="p" inputmode="tel" placeholder="10-digit mobile number" autocomplete="tel"><p class="er" id="ep" role="alert" hidden></p></div>
+  <div class="rv"><label class="lb" for="c">College name</label><input type="text" id="c" placeholder="Your college"><p class="er" id="ec" role="alert" hidden></p></div>
+  <fieldset class="rv"><legend class="lb">Year</legend><div class="yr" id="yr"></div><p class="er" id="ey" role="alert" hidden></p></fieldset>
+  <div class="rv"><button class="btn" type="submit" id="sb">Submit for approval</button><p class="note">Use the same number later to check your invite.</p></div>
+ </form></div></section>
+
+<section id="invite" class="sec" style="border-top:1px solid var(--line)"><p class="lb rv">Your invite</p><h2 class="rv">Check your invite</h2>
+ <p class="sub rv">Enter the number you applied with. Once you are approved, your invite appears here.</p>
+ <form id="lf" class="look rv" novalidate>
+  <div class="fld"><label class="lb" for="lp">Contact number</label><div class="pf" id="pf"><b>+91</b><input type="text" id="lp" inputmode="tel" placeholder="10-digit mobile number" autocomplete="tel"></div><p class="er" id="elp" role="alert" hidden></p></div>
+  <button class="btn" type="submit" id="lb">View my invite</button>
+ </form>
+ <div id="res" tabindex="-1" aria-live="polite"></div></section>
+</main>
+<footer class="rv">Unrest &middot; Diwali Party &middot; 7 Nov 2026</footer>
+<button class="snd" id="snd" type="button" aria-pressed="false" aria-label="Play music"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lb" id="sl">Sound off</span></button>
+<audio id="au" loop preload="none"></audio>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ===== CONFIG =====
+   GOOGLE_FORM: create a new Google Form (name, instagram, contact, college, year), paste its /formResponse URL and entry ids.
+   INVITE.lookup: Apps Script web app URL (GET ?phone=XXXXXXXXXX returns {status,name,college,year,id,group}).
+   Leave both empty for demo mode. Demo numbers: 9999999999 approved, 8888888888 pending, 7777777777 declined. */
+var GOOGLE_FORM={action:"",entries:{name:"",instagram:"",contact:"",college:"",year:""}};
+var INVITE={lookup:""};
+var MUSIC="diwali.mp3";
+var YEARS=["First Year","Second Year","Third Year","Fourth Year"];
+
+/* ---------- diya ---------- */
+var uid=0;
+function diya(){
+ var u="d"+(++uid);
+ return '<svg class="diya" viewBox="0 0 200 190" aria-hidden="true"><defs>'
+ +'<radialGradient id="'+u+'h" cx="50%" cy="62%" r="50%"><stop offset="0" stop-color="#FFB347" stop-opacity=".95"/><stop offset=".35" stop-color="#FF8A1F" stop-opacity=".35"/><stop offset="1" stop-color="#FF8A1F" stop-opacity="0"/></radialGradient>'
+ +'<linearGradient id="'+u+'b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9622B"/><stop offset=".5" stop-color="#9C4220"/><stop offset="1" stop-color="#5B2210"/></linearGradient>'
+ +'<radialGradient id="'+u+'o" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFC25C"/><stop offset="1" stop-color="#C46A1C"/></radialGradient>'
+ +'<linearGradient id="'+u+'f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF7A12"/><stop offset=".55" stop-color="#FFB02E"/><stop offset="1" stop-color="#FFE08A"/></linearGradient>'
+ +'<filter id="'+u+'w" x="-30%" y="-20%" width="160%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".02 .045" numOctaves="2" seed="3"><animate attributeName="baseFrequency" dur="3.4s" values=".02 .045;.03 .06;.02 .045" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="7"/></filter>'
+ +'<filter id="'+u+'s"><feGaussianBlur stdDeviation="2.2"/></filter></defs>'
+ +'<circle class="halo" cx="100" cy="92" r="105" fill="url(#'+u+'h)"/>'
+ +'<ellipse cx="100" cy="176" rx="82" ry="8" fill="#000" opacity=".5" filter="url(#'+u+'s)"/>'
+ +'<path d="M9 96Q100 84 191 96Q184 168 100 176Q16 168 9 96Z" fill="url(#'+u+'b)"/>'
+ +'<path d="M20 112Q100 126 180 112" fill="none" stroke="#E08A4A" stroke-opacity=".35" stroke-width="2"/>'
+ +'<path d="M9 96Q100 84 191 96Q100 112 9 96Z" fill="#E7924F"/>'
+ +'<ellipse cx="100" cy="97" rx="78" ry="10" fill="url(#'+u+'o)"/>'
+ +'<path d="M100 98Q101 84 100 70" stroke="#1a0f08" stroke-width="3.2" stroke-linecap="round" fill="none"/>'
+ +'<g transform="translate(0 6)"><path class="smoke" d="M100 62C92 52 108 46 100 34" fill="none" stroke="#bda98f" stroke-width="2.2" stroke-linecap="round" filter="url(#'+u+'s)"/></g>'
+ +'<g class="fl" filter="url(#'+u+'w)"><path d="M100 10C120 36 128 56 100 78C72 56 80 36 100 10Z" fill="url(#'+u+'f)"/><path class="core" d="M100 38C110 54 112 64 100 76C88 64 90 54 100 38Z" fill="#FFF3C9"/><ellipse cx="100" cy="74" rx="6" ry="7" fill="#7FA6FF" opacity=".55"/></g>'
+ +'</svg>'}
+var big=$("#big"),mq=$("#mq"),hero=$("#hero");
+big.innerHTML=diya();
+/* live DU college banner: two rows drifting in opposite directions */
+var DU=["SRCC","LSR","St. Stephen’s","Hindu","Miranda","Hansraj","KMC","Ramjas","Daulat Ram","Gargi","SVC","DCAC","ARSD","ANDC","BRAC","Bharati","BCAS","CVS","DDUC","DSC","IPCW","IHE","JMC","JDMC","Kalindi","KNC","Keshav","LBC","LIC","Maitreyi","Mata Sundri","MAC","MLNC","PGDAV","Rajdhani","RLA","Ramanujan","SBSC","SRGC","SSCBS","Satyawati","Shivaji","SLC","SPM","SGTB","SGND","Sri Aurobindo","Shraddhanand","VC","ZHDC","Aditi","Aryabhatta","Deshbandhu","BNC","NCWEB"];
+function trk(l,c){var h=l.map(function(n){return '<span class="ck">'+n+'</span>'}).join("");return '<div class="tr '+c+'"><div class="tk">'+h+'</div><div class="tk" aria-hidden="true">'+h+'</div></div>'}
+var mid=Math.ceil(DU.length/2);
+mq.innerHTML=trk(DU.slice(0,mid),"a")+trk(DU.slice(mid),"b");
+function lightUp(el,d){setTimeout(function(){el.classList.add("on")},d)}
+setTimeout(function(){
+ hero.classList.add("lit");lightUp(big.firstChild,rm?0:500)
+},rm?0:350);
+if(!rm)hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5;big.style.transform="translateX("+(x*-10)+"px)";big.firstChild.style.transform="rotate("+(x*3)+"deg)"});
+
+/* heading: letters rise out of a mask, one after another */
+var ttl=$("#ttl"),li=0;
+ttl.innerHTML=ttl.getAttribute("aria-label").split(" ").map(function(w){
+ var ls=w.split("").map(function(c){return '<span style="--i:'+(li++)+'">'+c+'</span>'}).join("");
+ return '<span class="wd'+(w==="Diwali"?" fire":"")+'" aria-hidden="true">'+ls+'</span>'}).join("");
+
+/* countdown to 7 Nov 2026, 3 PM IST */
+var T=new Date("2026-11-07T15:00:00+05:30").getTime(),cd=$("#cd");
+function tick(){var d=T-Date.now();if(d<=0){cd.innerHTML='<b>Tonight.</b>';cd.hidden=false;return}
+ var v=[[Math.floor(d/864e5),"days"],[Math.floor(d%864e5/36e5),"hours"],[Math.floor(d%36e5/6e4),"min"],[Math.floor(d%6e4/1e3),"sec"]];
+ cd.innerHTML=v.map(function(x){return '<div><b>'+String(x[0]).padStart(2,"0")+'</b><i>'+x[1]+'</i></div>'}).join("");cd.hidden=false}
+tick();setInterval(tick,1000);
+
+/* scroll reveals: staggered by position among siblings */
+var rvs=[].slice.call(document.querySelectorAll(".rv"));
+rvs.forEach(function(el){var sib=[].filter.call(el.parentNode.children,function(c){return c.classList.contains("rv")});el.style.transitionDelay=Math.min(sib.indexOf(el),5)*90+"ms"});
+if(!rm&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -6% 0px"});rvs.forEach(function(el){io.observe(el)})}
+else rvs.forEach(function(el){el.classList.add("in")});
+
+/* music */
+var au=$("#au"),snd=$("#snd"),sl=$("#sl"),want=true,fade,noop=function(){};
+try{if(localStorage.getItem("dp-sound")==="off")want=false}catch(e){}
+au.src=MUSIC;
+function ui(on,wait){snd.classList.toggle("on",on);snd.classList.toggle("wait",!!wait);snd.setAttribute("aria-pressed",String(on));snd.setAttribute("aria-label",on?"Mute music":"Play music");sl.textContent=wait?"Tap for sound":on?"Sound on":"Sound off"}
+var volOK=(au.volume=.3,au.volume===.3);
+function ramp(to){clearInterval(fade);if(!volOK)return;fade=setInterval(function(){var v=au.volume,d=to-v;if(Math.abs(d)<.04){au.volume=to;clearInterval(fade)}else au.volume=Math.max(0,Math.min(1,v+(d>0?.03:-.05)))},50)}
+function start(){if(volOK)au.volume=0;return Promise.resolve(au.play()).then(function(){ramp(.5);ui(true)})}
+function save(v){try{localStorage.setItem("dp-sound",v)}catch(e){}}
+snd.addEventListener("click",function(){if(snd.classList.contains("on")){want=false;save("off");clearInterval(fade);au.pause();ui(false)}else{want=true;save("on");start().catch(noop)}});
+function arm(){var ev=["pointerdown","touchend","keydown","click"];function f(e){if(snd.contains(e.target))return;start().then(off).catch(noop)}function off(){ev.forEach(function(t){removeEventListener(t,f,true)})}ev.forEach(function(t){addEventListener(t,f,true)})}
+if(want){start().catch(function(){ui(false,true);arm()})}else ui(false);
+document.addEventListener("visibilitychange",function(){if(document.hidden){if(!au.paused)au.pause()}else if(want&&snd.classList.contains("on")&&au.paused)au.play().catch(noop)});
+
+/* ---------- live invite counter ---------- */
+var BASE=7,shown=BASE,cn=$("#cn");
+function showCount(n){var from=shown;shown=n;if(rm||from===n){cn.textContent=n;return}var t0=performance.now();(function st(t){var p=Math.min(1,(t-t0)/900);cn.textContent=Math.round(from+(n-from)*p);if(p<1)requestAnimationFrame(st)})(t0);cn.classList.remove("bump");void cn.offsetWidth;cn.classList.add("bump")}
+function fetchCount(){
+ if(!INVITE.lookup){var x=0;try{x=+localStorage.getItem("dp-demo")||0}catch(e){}return Promise.resolve(x)}
+ return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"count=1").then(function(r){return r.json()}).then(function(d){return +d.count||0})}
+function pollCount(){if(document.hidden)return;fetchCount().then(function(n){if(BASE+n>shown)showCount(BASE+n)}).catch(noop)}
+function bumpCount(){if(!INVITE.lookup){try{localStorage.setItem("dp-demo",String((+localStorage.getItem("dp-demo")||0)+1))}catch(e){}}showCount(shown+1)}
+pollCount();setInterval(pollCount,20000);document.addEventListener("visibilitychange",pollCount);
+
+/* ---------- invite request ---------- */
+$("#yr").innerHTML=YEARS.map(function(y){return '<label><input type="radio" name="year" value="'+y+'"><span>'+y+'</span></label>'}).join("");
+function err(id,m){var e=$("#e"+id);e.hidden=!m;e.textContent=m||"";var i=$("#"+id);if(i)i.setAttribute("aria-invalid",!!m)}
+function send(d){var g=GOOGLE_FORM,en=g.entries;if(!g.action||!en.name)return Promise.resolve();
+ var b=new URLSearchParams();b.append(en.name,d.name);b.append(en.instagram,d.ig);b.append(en.contact,d.contact);b.append(en.college,d.college);b.append(en.year,d.year);
+ return fetch(g.action,{method:"POST",mode:"no-cors",body:b})}
+var busy=false;
+$("#f").onsubmit=function(ev){ev.preventDefault();if(busy)return;
+ var n=$("#n").value.trim(),i=$("#i").value.trim().replace(/^@/,"").toLowerCase(),p=$("#p").value.replace(/[\s-]/g,"").replace(/^(\+91|91|0)(?=\d{10}$)/,""),c=$("#c").value.trim(),y=(document.querySelector("input[name=year]:checked")||{}).value,ok=true;
+ err("n",n.length<2?(ok=false,"Enter your full name."):"");
+ err("i",!/^[a-z0-9._]{1,30}$/.test(i)?(ok=false,"Use letters, numbers, dots and underscores only."):"");
+ err("p",!/^[6-9]\d{9}$/.test(p)?(ok=false,"Enter a valid 10-digit mobile number."):"");
+ err("c",c.length<2?(ok=false,"Enter your college."):"");
+ err("y",!y?(ok=false,"Pick your year."):"");
+ if(!ok)return;busy=true;$("#sb").textContent="Submitting…";
+ send({name:n,ig:i,contact:p,college:c,year:y}).then(function(){bumpCount();
+  $("#fw").innerHTML='<div class="box" role="status"><h2 class="serif" style="font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.08;letter-spacing:-.03em">Request received.<br><span style="color:var(--gold)">We will light the way.</span></h2><p style="margin-top:20px;max-width:28em;color:rgba(248,235,211,.8)">The Unrest team will review it. Once you are approved, payment opens up (passes start at ₹699). Check your invite with the number you applied with.</p><a href="#invite" style="display:inline-block;margin-top:20px;color:var(--gold);border-bottom:1px solid currentColor">Check your invite</a></div>'
+ }).catch(function(){busy=false;$("#sb").textContent="Submit for approval";err("y","Could not send. Check your connection and try again.")})};
+
+/* ---------- invite lookup ---------- */
+function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function look(p){
+ if(!INVITE.lookup)return new Promise(function(r){setTimeout(function(){r(p==="9999999999"?{status:"approved",name:"Aarav Sharma",college:"Kirori Mal College",year:"Second Year",group:"https://chat.whatsapp.com/demo"}:p==="8888888888"?{status:"pending"}:p==="7777777777"?{status:"declined"}:{status:"none"})},800)});
+ return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"phone="+encodeURIComponent(p)).then(function(r){if(!r.ok)throw 0;return r.json()})}
+var dm=INVITE.lookup?"":'<p class="dm">Demo data</p>';
+function msg(h,t,l){return '<div class="msg" role="status"><h3>'+h+'</h3><p>'+t+'</p>'+(l||"")+dm+'</div>'}
+function pass(d,p){
+ var id=d.id||"DP-"+p.slice(-4),grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<div class="pa"><a class="btn" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a></div>':"";
+ return '<div class="pass"><div class="ph"><div><p class="lb">Unrest presents</p><p class="pt">Diwali<br><em>Party</em></p></div><div class="pd">'+diya()+'</div></div>'
+ +'<dl class="pb"><div class="w2"><dt class="lb">Guest</dt><dd class="nm">'+esc(d.name||"Guest")+'</dd></div><div><dt class="lb">College</dt><dd>'+esc(d.college||"-")+'</dd></div><div><dt class="lb">Year</dt><dd>'+esc(d.year||"-")+'</dd></div><div><dt class="lb">Date</dt><dd>Sat, 7 Nov 2026</dd></div><div><dt class="lb">Time</dt><dd>3:00 PM to 8:00 PM</dd></div><div class="w2"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div></dl>'
+ +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>Confirmed</span></div>'+grp+'</div>'+dm}
+var lbusy=false,res=$("#res");
+$("#lp").addEventListener("input",function(){res.innerHTML="";$("#pf").classList.remove("bad");err("lp","")});
+$("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
+ var p=$("#lp").value.replace(/[\s-]/g,"").replace(/^(\+91|91|0)(?=\d{10}$)/,"");
+ if(!/^[6-9]\d{9}$/.test(p)){err("lp","Enter a valid 10-digit mobile number.");$("#pf").classList.add("bad");return}
+ err("lp","");$("#pf").classList.remove("bad");lbusy=true;var b=$("#lb");b.textContent="Checking…";res.innerHTML="";
+ look(p).then(function(d){var s=d&&d.status;
+  if(s==="approved"){res.innerHTML=pass(d,p);setTimeout(function(){var e=res.querySelector(".diya");e&&e.classList.add("on")},700)}
+  else if(s==="pending")res.innerHTML=msg("Still under review.","We have your request. The Unrest team is still reviewing it. Check back soon with the same number.");
+  else if(s==="declined")res.innerHTML=msg("Not this time.","We could not approve this request. Contact the Unrest team if you think this is a mistake.");
+  else res.innerHTML=msg("No request found.","Nothing under that number. Check the digits, or request your invite.",'<a href="#request">Request your invite</a>');
+  res.focus({preventScroll:true});res.scrollIntoView({behavior:rm?"auto":"smooth",block:"center"})
+ }).catch(function(){res.innerHTML=msg("Something broke.","Could not check right now. Check your connection and try again.")}).then(function(){lbusy=false;b.textContent="View my invite"})};
+})();
+</script>
+</body>
+</html>
