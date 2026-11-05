@@ -143,6 +143,8 @@ fieldset{border:0;padding:0;min-width:0}
 .upi{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px dashed #4a3b2c}.upi b{font-weight:600;overflow-wrap:anywhere}
 .pay .note b{color:var(--cream)}
 .pay .btn{margin-top:18px}
+.gb{max-width:400px;margin-top:16px;padding:26px;border:1px solid var(--line);border-radius:22px}
+.bl{margin-top:12px;padding:14px 16px;border:1px dashed #4a3b2c;border-radius:12px;font-weight:600;color:var(--gold);overflow-wrap:anywhere;filter:blur(7px);user-select:none;-webkit-user-select:none;pointer-events:none}
 footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font-size:.8rem;color:var(--mute)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important}.rv,.meta,.cta,.cd,.cnt{opacity:1;transform:none;filter:none}.diya .fl{opacity:1;transform:none}.diya .halo{opacity:1}}
 </style>
@@ -158,7 +160,7 @@ footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font
    <p class="tag">That one college Diwali party you&rsquo;ll never forget.</p>
    <p class="meta">Saturday, 7 November 2026, 3:00 PM to 8:00 PM<br>Civil Lines, New Delhi</p>
    <div class="cnt" id="cnt"><b id="cn" aria-live="polite">17</b><span><i></i>invites requested so far</span></div>
-   <div class="cta"><div class="bts"><a class="btn" href="#request">Get your pass</a><a class="btn g" href="#invite">Check my invite</a></div><p>Pay once and your pass is confirmed.</p></div>
+   <div class="cta"><div class="bts"><a class="btn" href="#request">Get your pass</a><a class="btn g" href="#invite">Check my invite</a></div><p>Pay, verify, and join the passholders group.</p></div>
    <div class="cd" id="cd" aria-label="Time until the party" hidden></div>
   </div>
   <div class="big" id="big" aria-hidden="true"></div>
@@ -174,7 +176,7 @@ footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font
 </dl></section>
 
 <section id="request" class="sec"><p class="lb rv">Request access</p><h2 class="rv">Get your pass</h2>
- <p class="sub rv"><span class="pr">Passes start at ₹699.</span> Pay and your pass is confirmed right away.</p>
+ <p class="sub rv"><span class="pr">Passes start at ₹699.</span> Pay, verify your payment, and get your pass.</p>
  <div id="fw"><form id="f" novalidate>
   <div class="rv"><label class="lb" for="n">Full name</label><input type="text" id="n" placeholder="As on your college ID" autocomplete="name"><p class="er" id="en" role="alert" hidden></p></div>
   <div class="rv"><label class="lb" for="i">Instagram username</label><input type="text" id="i" placeholder="@username" autocapitalize="none"><p class="er" id="ei" role="alert" hidden></p></div>
@@ -319,13 +321,14 @@ var dm=INVITE.lookup?"":'<p class="dm">Demo data</p>';
 function msg(h,t,l){return '<div class="msg" role="status"><h3>'+h+'</h3><p>'+t+'</p>'+(l||"")+dm+'</div>'}
 function pass(d,p){
  var id=d.id||"DP-"+p.slice(-4),pend=d.status==="pending",st=d.pay==="paid"?"paid":d.pay==="verifying"?"verifying":"due",
- chip=st==="due"?"Awaiting payment":"Confirmed",
- note=st==="verifying"?'<p class="note">Your pass is confirmed. The Unrest team matches your payment to this pass ID; any payment we cannot match is refunded in full.</p>':st==="paid"?'<p class="note">Payment received. See you on 7 November.</p>':"",
- grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<div class="pa bts"><a class="btn g" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a></div>':"";
+ chip=st==="due"?"Awaiting payment":st==="verifying"?"Verifying payment":"Verified",
+ note=st==="verifying"?'<p class="note">The Unrest team matches your payment to this pass ID. Any payment we cannot match is refunded in full.</p>':st==="paid"?'<p class="note">Payment verified. See you on 7 November.</p>':"",
+ ok=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||""),
+ grp=st==="verifying"?'<div class="gb"><p class="lb">Passholders group</p><div class="bl" aria-hidden="true">https://chat.whatsapp.com/XXXXXXXXXXXXXXXXXXXXXX</div><p class="note">Once verified, you will be shown the group link for all the passholders.</p><button class="btn g s" type="button" id="chk" style="margin-top:14px">Check status</button><p class="er" id="ech" role="alert" hidden></p></div>':st==="paid"?'<div class="gb"><p class="lb">Passholders group</p>'+(ok?'<a class="btn" style="margin-top:12px" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join the WhatsApp group</a>':'<p class="note">Your group link is on its way. Check again shortly.</p>')+'</div>':"";
  return '<div class="pass"><div class="ph"><div><p class="lb">Unrest presents</p><p class="pt">Diwali<br><em>Party</em></p></div><div class="pd">'+diya()+'</div></div>'
  +'<dl class="pb"><div class="w2"><dt class="lb">Guest</dt><dd class="nm">'+esc(d.name||"Guest")+'</dd></div><div><dt class="lb">College</dt><dd>'+esc(d.college||"-")+'</dd></div><div><dt class="lb">Year</dt><dd>'+esc(d.year||"-")+'</dd></div><div><dt class="lb">Date</dt><dd>Sat, 7 Nov 2026</dd></div><div><dt class="lb">Time</dt><dd>3:00 PM to 8:00 PM</dd></div><div class="w2"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div></dl>'
- +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>'+chip+'</span></div>'+grp+'</div>'
- +(st==="due"?'<div class="pay" id="pay"></div>':"")+note+dm}
+ +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>'+chip+'</span></div></div>'
+ +(st==="due"?'<div class="pay" id="pay"></div>':grp)+note+dm}
 function upiLink(id){return "upi://pay?pa="+encodeURIComponent(UPI.id)+"&pn="+encodeURIComponent(UPI.name)+"&am="+AMOUNT+"&cu=INR&tn="+encodeURIComponent(id+" Diwali Party")}
 function qrSvg(t){if(!window.qrcode)return"";var q=qrcode(0,"M");q.addData(t);q.make();var n=q.getModuleCount(),m=2,d="",r,c;for(r=0;r<n;r++)for(c=0;c<n;c++)if(q.isDark(r,c))d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z";var z=n+2*m;return '<svg viewBox="0 0 '+z+' '+z+'" shape-rendering="crispEdges" role="img" aria-label="UPI QR code for ₹'+AMOUNT+'"><rect width="'+z+'" height="'+z+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'}
 function payHtml(id,link,touch){var qr=qrSvg(link);
@@ -335,19 +338,23 @@ function payHtml(id,link,touch){var qr=qrSvg(link);
  +'<div class="upi"><span class="lb">UPI ID</span><b>'+esc(UPI.id)+'</b><button class="btn g s" type="button" id="cp">Copy</button></div>'
  +'<p class="note">Amount ₹'+AMOUNT+'. Put <b>'+esc(id)+'</b> in the remark.</p>'
  +'<p class="note">Any payment we cannot match to a pass is refunded in full.</p>'
- +'<button class="btn" type="button" id="ipaid">I’ve paid, confirm my pass</button><p class="er" id="eip" role="alert" hidden></p>'}
+ +'<button class="btn" type="button" id="ipaid">Verify my payment</button><p class="er" id="eip" role="alert" hidden></p>'}
 function sendPayer(p,n){if(!INVITE.lookup){DEMO.payer=n;return Promise.resolve()}return fetch(INVITE.lookup,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({phone:p,payer:n})})}
 function show(c,d,p){
  c.innerHTML=pass(d,p);
  var box=c.querySelector("#pay");
  setTimeout(function(){var e=c.querySelector(".diya");e&&e.classList.add("on")},rm?0:300);
+ var ck=c.querySelector("#chk");
+ if(ck){var cb=false;ck.onclick=function(){if(cb)return;cb=true;ck.textContent="Checking…";var eh=c.querySelector("#ech");eh.hidden=true;
+  look(p).then(function(d2){if(d2&&d2.pay==="paid"){var d3={};for(var k in d2)d3[k]=d2[k];d3.status=d3.status||d.status;show(c,d3,p)}else{cb=false;ck.textContent="Check status";eh.textContent="Not verified yet. Check back soon.";eh.hidden=false}})
+  .catch(function(){cb=false;ck.textContent="Check status";eh.textContent="Could not check right now. Try again.";eh.hidden=false})}}
  if(!box)return;
  var id=d.id||"DP-"+p.slice(-4),link=upiLink(id),touch=matchMedia("(pointer:coarse)").matches,pb=false;
  box.innerHTML=payHtml(id,link,touch);
  var cp=box.querySelector("#cp");cp.onclick=function(){copyText(UPI.id,cp,"Copy")};
  var ip=box.querySelector("#ipaid"),ee=box.querySelector("#eip");
  ip.onclick=function(){if(pb)return;pb=true;ip.textContent="Sending…";ee.hidden=true;
-  sendPayer(p,"self-reported").then(function(){var d2={};for(var k in d)d2[k]=d[k];d2.pay="verifying";show(c,d2,p)}).catch(function(){pb=false;ip.textContent="I’ve paid, confirm my pass";ee.textContent="Could not record that. Check your connection and try again.";ee.hidden=false})}}
+  sendPayer(p,"self-reported").then(function(){var d2={};for(var k in d)d2[k]=d[k];d2.pay="verifying";show(c,d2,p)}).catch(function(){pb=false;ip.textContent="Verify my payment";ee.textContent="Could not record that. Check your connection and try again.";ee.hidden=false})}}
 var lbusy=false,res=$("#res");
 $("#lp").addEventListener("input",function(){res.innerHTML="";$("#pf").classList.remove("bad");err("lp","")});
 $("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
