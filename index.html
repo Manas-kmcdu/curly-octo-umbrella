@@ -20,6 +20,8 @@ a{color:inherit;text-decoration:none}
 .btn:hover{box-shadow:0 0 50px -6px rgba(255,138,31,.75);transform:translateY(-2px)}
 .btn.g{background:transparent;color:var(--cream);border-color:#4a3b2c}
 .btn.g:hover{border-color:var(--gold);color:var(--gold)}
+.btn.s{height:40px;padding:0 18px;font-size:.85rem}
+.btn[hidden]{display:none}
 .btn:disabled{opacity:.5;cursor:default}
 .bts{display:flex;flex-wrap:wrap;gap:12px}
 @media(max-width:560px){.bts{flex-direction:column}.bts .btn{width:100%}}
@@ -120,6 +122,8 @@ fieldset{border:0;padding:0;min-width:0}
 .dm{margin-top:14px;font-size:.75rem;color:#5a4a3a}
 .box{border:1px solid var(--line);border-radius:22px;padding:clamp(28px,5vw,48px)}
 .box h2{margin:0}
+.lnk{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px;padding:14px 18px;border:1px dashed #4a3b2c;border-radius:14px}
+.lnk b{font-weight:600;color:var(--gold);overflow-wrap:anywhere}
 /* invite pass */
 .pass{position:relative;max-width:400px;overflow:hidden;border:1px solid #4a3b2c;border-radius:22px;background:linear-gradient(170deg,#1d130b,#0f0a07 65%);box-shadow:0 40px 90px -40px rgba(255,138,31,.5);animation:pin 1.2s cubic-bezier(.22,1,.36,1) both}
 @keyframes pin{from{opacity:0;transform:translateY(26px) scale(.97);filter:blur(8px)}}
@@ -133,6 +137,12 @@ fieldset{border:0;padding:0;min-width:0}
 .chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid rgba(244,181,68,.5);border-radius:99px;font-size:.78rem;font-weight:600;color:var(--gold)}
 .chip i{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px 2px var(--fire)}
 .pass .pa{padding:0 26px 26px}
+.pay{max-width:400px;margin-top:16px;padding:26px;border:1px solid var(--line);border-radius:22px}
+.pay[hidden]{display:none}
+.qr{width:208px;margin:16px 0 0;padding:10px;border-radius:12px;background:#fff}.qr svg{display:block;width:100%;height:auto}
+.upi{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px dashed #4a3b2c}.upi b{font-weight:600;overflow-wrap:anywhere}
+.pay .note b{color:var(--cream)}
+.uf{display:grid;gap:0;margin-top:22px;padding-top:20px;border-top:1px dashed #4a3b2c}.uf .btn{justify-self:start;margin-top:18px}
 footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font-size:.8rem;color:var(--mute)}
 /* sound */
 .snd{position:fixed;z-index:70;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,calc(env(safe-area-inset-bottom,0px) + 8px));display:inline-flex;align-items:center;gap:12px;height:44px;padding:0 18px 0 16px;border:1px solid var(--line);border-radius:99px;background:rgba(12,8,6,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--cream);cursor:pointer;transition:border-color .3s}
@@ -197,17 +207,23 @@ footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font
 <button class="snd" id="snd" type="button" aria-pressed="false" aria-label="Play music"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lb" id="sl">Sound off</span></button>
 <audio id="au" loop preload="none"></audio>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)},rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ===== CONFIG =====
-   GOOGLE_FORM: create a new Google Form (name, instagram, contact, college, year), paste its /formResponse URL and entry ids.
-   INVITE.lookup: Apps Script web app URL (GET ?phone=XXXXXXXXXX returns {status,name,college,year,id,group}).
+   GOOGLE_FORM: the form's /formResponse URL and entry ids.
+   INVITE.lookup: Apps Script web app URL.
+     GET ?phone=XXXXXXXXXX  returns {status,name,college,year,id,group}
+     GET ?count=1           returns {count:N}  (N = number of requests in the sheet; the page shows 7 + N)
    Leave both empty for demo mode. Demo numbers: 9999999999 approved, 8888888888 pending, 7777777777 declined. */
 var GOOGLE_FORM={action:"https://docs.google.com/forms/d/e/1FAIpQLSd_UE38RTGDqux9ck6SA_C8OICVcYt1hNKgMtcRSOBfqerk1g/formResponse",entries:{name:"entry.1602124482",instagram:"entry.177460266",contact:"entry.779186578",college:"entry.519564967",year:"entry.48852931"}};
 var INVITE={lookup:"https://script.google.com/macros/s/AKfycbw8lizWHaSLGieNUrmyXQ9ZEVU_WHRDPNBz6RtQieYACVGjIp2YG1l1F_wK9SL0_hNmQg/exec"};
 var MUSIC="diwali.mp3";
+var SITE="https://diwali.unrestdu.in";
+var SHARE="Unrest Diwali Party. Invite only for Delhi college students. 7 Nov, 3 PM to 8 PM, Civil Lines, New Delhi. Request your invite: "+SITE;
+var UPI={id:"9650692251@pthdfc",name:"Unrest"},AMOUNT=699;
 var YEARS=["First Year","Second Year","Third Year","Fourth Year"];
 
 /* ---------- diya ---------- */
@@ -277,15 +293,18 @@ function arm(){var ev=["pointerdown","touchend","keydown","click"];function f(e)
 if(want){start().catch(function(){ui(false,true);arm()})}else ui(false);
 document.addEventListener("visibilitychange",function(){if(document.hidden){if(!au.paused)au.pause()}else if(want&&snd.classList.contains("on")&&au.paused)au.play().catch(noop)});
 
-/* ---------- live invite counter ---------- */
-var BASE=7,shown=BASE,cn=$("#cn");
+/* ---------- live invite counter ----------
+   Shared across everyone: the number comes from the sheet (7 given on WhatsApp + one per request), so every open
+   page reads the same value. Each page re-checks every 10s and animates up when a new entry lands.
+   The first successful read sets the exact number; after that it only counts up. */
+var BASE=7,shown=17,first=true,cn=$("#cn");
 function showCount(n){var from=shown;shown=n;if(rm||from===n){cn.textContent=n;return}var t0=performance.now();(function st(t){var p=Math.min(1,(t-t0)/900);cn.textContent=Math.round(from+(n-from)*p);if(p<1)requestAnimationFrame(st)})(t0);cn.classList.remove("bump");void cn.offsetWidth;cn.classList.add("bump")}
 function fetchCount(){
  if(!INVITE.lookup){var x=0;try{x=+localStorage.getItem("dp-demo")||0}catch(e){}return Promise.resolve(x)}
- return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"count=1").then(function(r){return r.json()}).then(function(d){return +d.count||0})}
-function pollCount(){if(document.hidden)return;fetchCount().then(function(n){if(BASE+n>shown)showCount(BASE+n)}).catch(noop)}
+ return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"count=1&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){if(!d||typeof d.count!=="number")throw 0;return d.count})}
+function pollCount(){if(document.hidden)return;fetchCount().then(function(n){var v=BASE+n;if(first){first=false;if(v!==shown)showCount(v)}else if(v>shown)showCount(v)}).catch(noop)}
 function bumpCount(){if(!INVITE.lookup){try{localStorage.setItem("dp-demo",String((+localStorage.getItem("dp-demo")||0)+1))}catch(e){}}showCount(shown+1)}
-pollCount();setInterval(pollCount,20000);document.addEventListener("visibilitychange",pollCount);
+pollCount();setInterval(pollCount,10000);document.addEventListener("visibilitychange",pollCount);
 
 /* ---------- invite request ---------- */
 $("#yr").innerHTML=YEARS.map(function(y){return '<label><input type="radio" name="year" value="'+y+'"><span>'+y+'</span></label>'}).join("");
@@ -293,6 +312,16 @@ function err(id,m){var e=$("#e"+id);e.hidden=!m;e.textContent=m||"";var i=$("#"+
 function send(d){var g=GOOGLE_FORM,en=g.entries;if(!g.action||!en.name)return Promise.resolve();
  var b=new URLSearchParams();b.append(en.name,d.name);b.append(en.instagram,d.ig);b.append(en.contact,d.contact);b.append(en.college,d.college);b.append(en.year,d.year);
  return fetch(g.action,{method:"POST",mode:"no-cors",body:b})}
+function done(){
+ $("#fw").innerHTML='<div class="box" role="status"><h2 class="serif" style="font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.08;letter-spacing:-.03em">Request received.<br><span style="color:var(--gold)">Let’s make this party big.</span></h2>'
+ +'<p style="margin-top:20px;max-width:28em;color:rgba(248,235,211,.8)">Use this link to invite your friends.</p>'
+ +'<div class="lnk"><b>diwali.unrestdu.in</b><button class="btn s g" type="button" id="cpl">Copy link</button></div>'
+ +'<div class="bts" style="margin-top:16px"><a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text='+encodeURIComponent(SHARE)+'">Share on WhatsApp</a><button class="btn g" type="button" id="shr" hidden>More ways to share</button></div>'
+ +'<p class="note" style="margin-top:22px">The Unrest team will review your request. Once you are approved, payment opens up (passes start at ₹699). <a href="#invite" style="color:var(--gold);border-bottom:1px solid currentColor">Check your invite</a></p></div>';
+ var c=$("#cpl");c.onclick=function(){function ok(){c.textContent="Copied";setTimeout(function(){c.textContent="Copy link"},1600)}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(SITE).then(ok,noop);else{var t=document.createElement("textarea");t.value=SITE;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){}t.remove()}};
+ if(navigator.share){var s=$("#shr");s.hidden=false;s.onclick=function(){navigator.share({title:"Unrest Diwali Party",text:SHARE.replace(" "+SITE,""),url:SITE}).catch(noop)}}
+ $("#fw").scrollIntoView({behavior:rm?"auto":"smooth",block:"center"})}
 var busy=false;
 $("#f").onsubmit=function(ev){ev.preventDefault();if(busy)return;
  var n=$("#n").value.trim(),i=$("#i").value.trim().replace(/^@/,"").toLowerCase(),p=$("#p").value.replace(/[\s-]/g,"").replace(/^(\+91|91|0)(?=\d{10}$)/,""),c=$("#c").value.trim(),y=(document.querySelector("input[name=year]:checked")||{}).value,ok=true;
@@ -302,22 +331,47 @@ $("#f").onsubmit=function(ev){ev.preventDefault();if(busy)return;
  err("c",c.length<2?(ok=false,"Enter your college."):"");
  err("y",!y?(ok=false,"Pick your year."):"");
  if(!ok)return;busy=true;$("#sb").textContent="Submitting…";
- send({name:n,ig:i,contact:p,college:c,year:y}).then(function(){bumpCount();
-  $("#fw").innerHTML='<div class="box" role="status"><h2 class="serif" style="font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.08;letter-spacing:-.03em">Request received.<br><span style="color:var(--gold)">We will light the way.</span></h2><p style="margin-top:20px;max-width:28em;color:rgba(248,235,211,.8)">The Unrest team will review it. Once you are approved, payment opens up (passes start at ₹699). Check your invite with the number you applied with.</p><a href="#invite" style="display:inline-block;margin-top:20px;color:var(--gold);border-bottom:1px solid currentColor">Check your invite</a></div>'
- }).catch(function(){busy=false;$("#sb").textContent="Submit for approval";err("y","Could not send. Check your connection and try again.")})};
+ send({name:n,ig:i,contact:p,college:c,year:y}).then(function(){bumpCount();done()}).catch(function(){busy=false;$("#sb").textContent="Submit for approval";err("y","Could not send. Check your connection and try again.")})};
 
 /* ---------- invite lookup ---------- */
 function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var DEMO={};
 function look(p){
- if(!INVITE.lookup)return new Promise(function(r){setTimeout(function(){r(p==="9999999999"?{status:"approved",name:"Aarav Sharma",college:"Kirori Mal College",year:"Second Year",group:"https://chat.whatsapp.com/demo"}:p==="8888888888"?{status:"pending"}:p==="7777777777"?{status:"declined"}:{status:"none"})},800)});
+ if(!INVITE.lookup)return new Promise(function(r){setTimeout(function(){r(p==="9999999999"?{status:"approved",name:"Aarav Sharma",college:"Kirori Mal College",year:"Second Year",pay:DEMO.payer?"verifying":"due",group:"https://chat.whatsapp.com/demo"}:p==="8888888888"?{status:"pending"}:p==="7777777777"?{status:"declined"}:{status:"none"})},800)});
  return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"phone="+encodeURIComponent(p)).then(function(r){if(!r.ok)throw 0;return r.json()})}
 var dm=INVITE.lookup?"":'<p class="dm">Demo data</p>';
 function msg(h,t,l){return '<div class="msg" role="status"><h3>'+h+'</h3><p>'+t+'</p>'+(l||"")+dm+'</div>'}
 function pass(d,p){
- var id=d.id||"DP-"+p.slice(-4),grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<div class="pa"><a class="btn" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a></div>':"";
+ var id=d.id||"DP-"+p.slice(-4),st=d.pay==="paid"?"paid":d.pay==="verifying"?"verifying":"due",chip={paid:"Confirmed",verifying:"Verifying payment",due:"Approved"}[st],note=st==="verifying"?'<p class="note">Payment details received. The Unrest team matches the name to the payment, then this pass shows Confirmed.</p>':st==="paid"?'<p class="note">Payment received. See you on 7 November.</p>':"",grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<a class="btn g" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a>':"",acts=(st==="due"?'<button class="btn" style="height:46px;font-size:.85rem" type="button" id="payb" aria-expanded="false" aria-controls="pay">Pay ₹'+AMOUNT+' and confirm</button>':"")+grp;acts=acts?'<div class="pa bts">'+acts+'</div>':"";
  return '<div class="pass"><div class="ph"><div><p class="lb">Unrest presents</p><p class="pt">Diwali<br><em>Party</em></p></div><div class="pd">'+diya()+'</div></div>'
  +'<dl class="pb"><div class="w2"><dt class="lb">Guest</dt><dd class="nm">'+esc(d.name||"Guest")+'</dd></div><div><dt class="lb">College</dt><dd>'+esc(d.college||"-")+'</dd></div><div><dt class="lb">Year</dt><dd>'+esc(d.year||"-")+'</dd></div><div><dt class="lb">Date</dt><dd>Sat, 7 Nov 2026</dd></div><div><dt class="lb">Time</dt><dd>3:00 PM to 8:00 PM</dd></div><div class="w2"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div></dl>'
- +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>Confirmed</span></div>'+grp+'</div>'+dm}
+ +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>'+chip+'</span></div>'+acts+'</div><div id="pay" class="pay" hidden></div>'+note+dm}
+function upiLink(id){return "upi://pay?pa="+encodeURIComponent(UPI.id)+"&pn="+encodeURIComponent(UPI.name)+"&am="+AMOUNT+"&cu=INR&tn="+encodeURIComponent(id+" Diwali Party")}
+function qrSvg(t){if(!window.qrcode)return"";var q=qrcode(0,"M");q.addData(t);q.make();var n=q.getModuleCount(),m=2,d="",r,c;for(r=0;r<n;r++)for(c=0;c<n;c++)if(q.isDark(r,c))d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z";var z=n+2*m;return '<svg viewBox="0 0 '+z+' '+z+'" shape-rendering="crispEdges" role="img" aria-label="UPI QR code for ₹'+AMOUNT+'"><rect width="'+z+'" height="'+z+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'}
+function payHtml(id,link,touch){var qr=qrSvg(link);
+ return '<p class="lb">Pay ₹'+AMOUNT+' by UPI</p>'
+ +(qr?'<div class="qr">'+qr+'</div><p class="note">Scan with any UPI app.</p>':"")
+ +(touch?'<a class="btn" style="margin-top:16px" href="'+esc(link)+'">Open UPI app</a>':"")
+ +'<div class="upi"><span class="lb">UPI ID</span><b>'+esc(UPI.id)+'</b><button class="btn g s" type="button" id="cp">Copy</button></div>'
+ +'<p class="note">Amount ₹'+AMOUNT+'. Put <b>'+esc(id)+'</b> in the remark.</p>'
+ +'<form id="uf" class="uf" novalidate><label class="lb" for="ut">After paying: name on the account you paid from</label><input type="text" id="ut" placeholder="As shown in your UPI app" autocomplete="name"><p class="er" id="eut" role="alert" hidden></p><p class="note">We match this name to the payment to confirm your pass.</p><button class="btn" type="submit" id="ub">Confirm payment</button></form>'}
+function sendPayer(p,n){if(!INVITE.lookup){DEMO.payer=n;return Promise.resolve()}return fetch(INVITE.lookup,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({phone:p,payer:n})})}
+function bindPay(d,p){var b=$("#payb");if(!b)return;
+ var id=d.id||"DP-"+p.slice(-4),link=upiLink(id),touch=matchMedia("(pointer:coarse)").matches,box=$("#pay"),pb=false;
+ b.onclick=function(){
+  if(!box.hidden){box.hidden=true;b.setAttribute("aria-expanded","false");return}
+  box.innerHTML=payHtml(id,link,touch);box.hidden=false;b.setAttribute("aria-expanded","true");
+  box.scrollIntoView({behavior:rm?"auto":"smooth",block:"nearest"});
+  var c=$("#cp");c.onclick=function(){function ok(){c.textContent="Copied";setTimeout(function(){c.textContent="Copy"},1600)}
+   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(UPI.id).then(ok,noop);else{var t=document.createElement("textarea");t.value=UPI.id;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){}t.remove()}};
+  $("#uf").onsubmit=function(ev){ev.preventDefault();if(pb)return;
+   var u=$("#ut").value.replace(/\s+/g," ").trim();
+   if(!/^[\p{L} .'-]{2,60}$/u.test(u)){err("ut","Enter the name on the account you paid from.");return}
+   err("ut","");pb=true;var bt=$("#ub");bt.textContent="Sending…";
+   sendPayer(p,u).then(function(){return look(p)}).then(function(d2){
+    if(d2&&d2.status==="approved"&&(d2.pay==="verifying"||d2.pay==="paid")){res.innerHTML=pass(d2,p);bindPay(d2,p);var e=res.querySelector(".diya");e&&e.classList.add("on")}
+    else throw 0;
+   }).catch(function(){pb=false;bt.textContent="Confirm payment";err("ut","Could not record that. Check your connection and try again.")})}}}
 var lbusy=false,res=$("#res");
 $("#lp").addEventListener("input",function(){res.innerHTML="";$("#pf").classList.remove("bad");err("lp","")});
 $("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
@@ -325,7 +379,7 @@ $("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
  if(!/^[6-9]\d{9}$/.test(p)){err("lp","Enter a valid 10-digit mobile number.");$("#pf").classList.add("bad");return}
  err("lp","");$("#pf").classList.remove("bad");lbusy=true;var b=$("#lb");b.textContent="Checking…";res.innerHTML="";
  look(p).then(function(d){var s=d&&d.status;
-  if(s==="approved"){res.innerHTML=pass(d,p);setTimeout(function(){var e=res.querySelector(".diya");e&&e.classList.add("on")},700)}
+  if(s==="approved"){res.innerHTML=pass(d,p);bindPay(d,p);setTimeout(function(){var e=res.querySelector(".diya");e&&e.classList.add("on")},700)}
   else if(s==="pending")res.innerHTML=msg("Still under review.","We have your request. The Unrest team is still reviewing it. Check back soon with the same number.");
   else if(s==="declined")res.innerHTML=msg("Not this time.","We could not approve this request. Contact the Unrest team if you think this is a mistake.");
   else res.innerHTML=msg("No request found.","Nothing under that number. Check the digits, or request your invite.",'<a href="#request">Request your invite</a>');
