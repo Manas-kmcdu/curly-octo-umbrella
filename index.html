@@ -142,7 +142,7 @@ fieldset{border:0;padding:0;min-width:0}
 .qr{width:208px;margin:16px 0 0;padding:10px;border-radius:12px;background:#fff}.qr svg{display:block;width:100%;height:auto}
 .upi{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px dashed #4a3b2c}.upi b{font-weight:600;overflow-wrap:anywhere}
 .pay .note b{color:var(--cream)}
-.uf{display:grid;gap:0;margin-top:22px;padding-top:20px;border-top:1px dashed #4a3b2c}.uf .btn{justify-self:start;margin-top:18px}
+.pay .btn{margin-top:18px}
 footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font-size:.8rem;color:var(--mute)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important}.rv,.meta,.cta,.cd,.cnt{opacity:1;transform:none;filter:none}.diya .fl{opacity:1;transform:none}.diya .halo{opacity:1}}
 </style>
@@ -158,7 +158,7 @@ footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font
    <p class="tag">That one college Diwali party you&rsquo;ll never forget.</p>
    <p class="meta">Saturday, 7 November 2026, 3:00 PM to 8:00 PM<br>Civil Lines, New Delhi</p>
    <div class="cnt" id="cnt"><b id="cn" aria-live="polite">17</b><span><i></i>invites requested so far</span></div>
-   <div class="cta"><div class="bts"><a class="btn" href="#request">Request your invite</a><a class="btn g" href="#invite">Check my invite</a></div><p>Invitations are confirmed after approval.</p></div>
+   <div class="cta"><div class="bts"><a class="btn" href="#request">Get your pass</a><a class="btn g" href="#invite">Check my invite</a></div><p>Pay once and your pass is confirmed.</p></div>
    <div class="cd" id="cd" aria-label="Time until the party" hidden></div>
   </div>
   <div class="big" id="big" aria-hidden="true"></div>
@@ -173,19 +173,19 @@ footer{border-top:1px solid var(--line);padding:32px 20px;text-align:center;font
  <div class="row rv"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div>
 </dl></section>
 
-<section id="request" class="sec"><p class="lb rv">Request access</p><h2 class="rv">Request your invite</h2>
- <p class="sub rv"><span class="pr">Passes start at ₹699.</span> Payment opens as soon as your invite is approved.</p>
+<section id="request" class="sec"><p class="lb rv">Request access</p><h2 class="rv">Get your pass</h2>
+ <p class="sub rv"><span class="pr">Passes start at ₹699.</span> Pay and your pass is confirmed right away.</p>
  <div id="fw"><form id="f" novalidate>
   <div class="rv"><label class="lb" for="n">Full name</label><input type="text" id="n" placeholder="As on your college ID" autocomplete="name"><p class="er" id="en" role="alert" hidden></p></div>
   <div class="rv"><label class="lb" for="i">Instagram username</label><input type="text" id="i" placeholder="@username" autocapitalize="none"><p class="er" id="ei" role="alert" hidden></p></div>
   <div class="rv"><label class="lb" for="p">Contact number</label><input type="text" id="p" inputmode="tel" placeholder="10-digit mobile number" autocomplete="tel"><p class="er" id="ep" role="alert" hidden></p></div>
   <div class="rv"><label class="lb" for="c">College name</label><input type="text" id="c" placeholder="Your college"><p class="er" id="ec" role="alert" hidden></p></div>
   <fieldset class="rv"><legend class="lb">Year</legend><div class="yr" id="yr"></div><p class="er" id="ey" role="alert" hidden></p></fieldset>
-  <div class="rv"><button class="btn" type="submit" id="sb">Submit for approval</button><p class="note">Use the same number later to check your invite.</p></div>
+  <div class="rv"><button class="btn" type="submit" id="sb">Get my pass</button><p class="note">Use the same number later to check your invite.</p></div>
  </form></div></section>
 
 <section id="invite" class="sec" style="border-top:1px solid var(--line)"><p class="lb rv">Your invite</p><h2 class="rv">Check your invite</h2>
- <p class="sub rv">Enter the number you applied with. Once you are approved, your invite appears here.</p>
+ <p class="sub rv">Enter the number you applied with. Your pass appears here.</p>
  <form id="lf" class="look rv" novalidate>
   <div class="fld"><label class="lb" for="lp">Contact number</label><div class="pf" id="pf"><b>+91</b><input type="text" id="lp" inputmode="tel" placeholder="10-digit mobile number" autocomplete="tel"></div><p class="er" id="elp" role="alert" hidden></p></div>
   <button class="btn" type="submit" id="lb">View my invite</button>
@@ -202,8 +202,12 @@ var $=function(s){return document.querySelector(s)},rm=matchMedia("(prefers-redu
 /* ===== CONFIG =====
    GOOGLE_FORM: the form's /formResponse URL and entry ids.
    INVITE.lookup: Apps Script web app URL.
-     GET ?phone=XXXXXXXXXX  returns {status,name,college,year,id,group}
+     GET ?phone=XXXXXXXXXX  returns {status,name,college,year,id,group,pay}
+       status: approved | pending | declined | none
+       pay: due | verifying | paid
+       For pending requests, return name/college/year too so the pass can show them.
      GET ?count=1           returns {count:N}  (N = number of requests in the sheet; the page shows 7 + N)
+     POST {phone,payer}     records that the person tapped "I've paid"
    Leave both empty for demo mode. Demo numbers: 9999999999 approved, 8888888888 pending, 7777777777 declined. */
 var GOOGLE_FORM={action:"https://docs.google.com/forms/d/e/1FAIpQLSd_UE38RTGDqux9ck6SA_C8OICVcYt1hNKgMtcRSOBfqerk1g/formResponse",entries:{name:"entry.1602124482",instagram:"entry.177460266",contact:"entry.779186578",college:"entry.519564967",year:"entry.48852931"}};
 var INVITE={lookup:"https://script.google.com/macros/s/AKfycbw8lizWHaSLGieNUrmyXQ9ZEVU_WHRDPNBz6RtQieYACVGjIp2YG1l1F_wK9SL0_hNmQg/exec"};
@@ -267,10 +271,7 @@ else rvs.forEach(function(el){el.classList.add("in")});
 
 var noop=function(){};
 
-/* ---------- live invite counter ----------
-   Shared across everyone: the number comes from the sheet (7 given on WhatsApp + one per request), so every open
-   page reads the same value. Each page re-checks every 10s and animates up when a new entry lands.
-   The first successful read sets the exact number; after that it only counts up. */
+/* ---------- live invite counter ---------- */
 var BASE=7,shown=17,first=true,cn=$("#cn");
 function showCount(n){var from=shown;shown=n;if(rm||from===n){cn.textContent=n;return}var t0=performance.now();(function st(t){var p=Math.min(1,(t-t0)/900);cn.textContent=Math.round(from+(n-from)*p);if(p<1)requestAnimationFrame(st)})(t0);cn.classList.remove("bump");void cn.offsetWidth;cn.classList.add("bump")}
 function fetchCount(){
@@ -286,16 +287,17 @@ function err(id,m){var e=$("#e"+id);e.hidden=!m;e.textContent=m||"";var i=$("#"+
 function send(d){var g=GOOGLE_FORM,en=g.entries;if(!g.action||!en.name)return Promise.resolve();
  var b=new URLSearchParams();b.append(en.name,d.name);b.append(en.instagram,d.ig);b.append(en.contact,d.contact);b.append(en.college,d.college);b.append(en.year,d.year);
  return fetch(g.action,{method:"POST",mode:"no-cors",body:b})}
-function done(){
- $("#fw").innerHTML='<div class="box" role="status"><h2 class="serif" style="font-size:clamp(1.9rem,5.5vw,3rem);line-height:1.08;letter-spacing:-.03em">Request received.<br><span style="color:var(--gold)">Let’s make this party big.</span></h2>'
- +'<p style="margin-top:20px;max-width:28em;color:rgba(248,235,211,.8)">Use this link to invite your friends.</p>'
+function copyText(t,btn,label){function ok(){btn.textContent="Copied";setTimeout(function(){btn.textContent=label},1600)}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,noop);else{var x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();try{document.execCommand("copy");ok()}catch(e){}x.remove()}}
+function done(d,p){
+ $("#fw").innerHTML='<div id="pp"></div>'
+ +'<div class="box" style="margin-top:28px"><p class="lb">Bring your friends</p>'
  +'<div class="lnk"><b>diwali.unrestdu.in</b><button class="btn s g" type="button" id="cpl">Copy link</button></div>'
- +'<div class="bts" style="margin-top:16px"><a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text='+encodeURIComponent(SHARE)+'">Share on WhatsApp</a><button class="btn g" type="button" id="shr" hidden>More ways to share</button></div>'
- +'<p class="note" style="margin-top:22px">The Unrest team will review your request. Once you are approved, payment opens up (passes start at ₹699). <a href="#invite" style="color:var(--gold);border-bottom:1px solid currentColor">Check your invite</a></p></div>';
- var c=$("#cpl");c.onclick=function(){function ok(){c.textContent="Copied";setTimeout(function(){c.textContent="Copy link"},1600)}
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(SITE).then(ok,noop);else{var t=document.createElement("textarea");t.value=SITE;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){}t.remove()}};
+ +'<div class="bts" style="margin-top:16px"><a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text='+encodeURIComponent(SHARE)+'">Share on WhatsApp</a><button class="btn g" type="button" id="shr" hidden>More ways to share</button></div></div>';
+ show($("#pp"),d,p);
+ var c=$("#cpl");c.onclick=function(){copyText(SITE,c,"Copy link")};
  if(navigator.share){var s=$("#shr");s.hidden=false;s.onclick=function(){navigator.share({title:"Unrest Diwali Party",text:SHARE.replace(" "+SITE,""),url:SITE}).catch(noop)}}
- $("#fw").scrollIntoView({behavior:rm?"auto":"smooth",block:"center"})}
+ $("#fw").scrollIntoView({behavior:rm?"auto":"smooth",block:"start"})}
 var busy=false;
 $("#f").onsubmit=function(ev){ev.preventDefault();if(busy)return;
  var n=$("#n").value.trim(),i=$("#i").value.trim().replace(/^@/,"").toLowerCase(),p=$("#p").value.replace(/[\s-]/g,"").replace(/^(\+91|91|0)(?=\d{10}$)/,""),c=$("#c").value.trim(),y=(document.querySelector("input[name=year]:checked")||{}).value,ok=true;
@@ -304,48 +306,48 @@ $("#f").onsubmit=function(ev){ev.preventDefault();if(busy)return;
  err("p",!/^[6-9]\d{9}$/.test(p)?(ok=false,"Enter a valid 10-digit mobile number."):"");
  err("c",c.length<2?(ok=false,"Enter your college."):"");
  err("y",!y?(ok=false,"Pick your year."):"");
- if(!ok)return;busy=true;$("#sb").textContent="Submitting…";
- send({name:n,ig:i,contact:p,college:c,year:y}).then(function(){bumpCount();done()}).catch(function(){busy=false;$("#sb").textContent="Submit for approval";err("y","Could not send. Check your connection and try again.")})};
+ if(!ok)return;busy=true;$("#sb").textContent="Getting your pass…";
+ send({name:n,ig:i,contact:p,college:c,year:y}).then(function(){bumpCount();done({status:"pending",name:n,college:c,year:y,pay:"due"},p)}).catch(function(){busy=false;$("#sb").textContent="Get my pass";err("y","Could not send. Check your connection and try again.")})};
 
-/* ---------- invite lookup ---------- */
+/* ---------- pass + payment ---------- */
 function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 var DEMO={};
 function look(p){
- if(!INVITE.lookup)return new Promise(function(r){setTimeout(function(){r(p==="9999999999"?{status:"approved",name:"Aarav Sharma",college:"Kirori Mal College",year:"Second Year",pay:DEMO.payer?"verifying":"due",group:"https://chat.whatsapp.com/demo"}:p==="8888888888"?{status:"pending"}:p==="7777777777"?{status:"declined"}:{status:"none"})},800)});
+ if(!INVITE.lookup)return new Promise(function(r){setTimeout(function(){r(p==="9999999999"?{status:"approved",name:"Aarav Sharma",college:"Kirori Mal College",year:"Second Year",pay:DEMO.payer?"verifying":"due",group:"https://chat.whatsapp.com/demo"}:p==="8888888888"?{status:"pending",name:"Demo Guest",college:"Demo College",year:"First Year",pay:DEMO.payer?"verifying":"due"}:p==="7777777777"?{status:"declined"}:{status:"none"})},800)});
  return fetch(INVITE.lookup+(INVITE.lookup.indexOf("?")<0?"?":"&")+"phone="+encodeURIComponent(p)).then(function(r){if(!r.ok)throw 0;return r.json()})}
 var dm=INVITE.lookup?"":'<p class="dm">Demo data</p>';
 function msg(h,t,l){return '<div class="msg" role="status"><h3>'+h+'</h3><p>'+t+'</p>'+(l||"")+dm+'</div>'}
 function pass(d,p){
- var id=d.id||"DP-"+p.slice(-4),st=d.pay==="paid"?"paid":d.pay==="verifying"?"verifying":"due",chip={paid:"Confirmed",verifying:"Verifying payment",due:"Approved"}[st],note=st==="verifying"?'<p class="note">Payment details received. The Unrest team matches the name to the payment, then this pass shows Confirmed.</p>':st==="paid"?'<p class="note">Payment received. See you on 7 November.</p>':"",grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<a class="btn g" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a>':"",acts=(st==="due"?'<button class="btn" style="height:46px;font-size:.85rem" type="button" id="payb" aria-expanded="false" aria-controls="pay">Pay ₹'+AMOUNT+' and confirm</button>':"")+grp;acts=acts?'<div class="pa bts">'+acts+'</div>':"";
+ var id=d.id||"DP-"+p.slice(-4),pend=d.status==="pending",st=d.pay==="paid"?"paid":d.pay==="verifying"?"verifying":"due",
+ chip=st==="due"?"Awaiting payment":"Confirmed",
+ note=st==="verifying"?'<p class="note">Your pass is confirmed. The Unrest team matches your payment to this pass ID; any payment we cannot match is refunded in full.</p>':st==="paid"?'<p class="note">Payment received. See you on 7 November.</p>':"",
+ grp=/^https:\/\/chat\.whatsapp\.com\//.test(d.group||"")?'<div class="pa bts"><a class="btn g" style="height:46px;font-size:.85rem" href="'+esc(d.group)+'" target="_blank" rel="noopener noreferrer">Join WhatsApp group</a></div>':"";
  return '<div class="pass"><div class="ph"><div><p class="lb">Unrest presents</p><p class="pt">Diwali<br><em>Party</em></p></div><div class="pd">'+diya()+'</div></div>'
  +'<dl class="pb"><div class="w2"><dt class="lb">Guest</dt><dd class="nm">'+esc(d.name||"Guest")+'</dd></div><div><dt class="lb">College</dt><dd>'+esc(d.college||"-")+'</dd></div><div><dt class="lb">Year</dt><dd>'+esc(d.year||"-")+'</dd></div><div><dt class="lb">Date</dt><dd>Sat, 7 Nov 2026</dd></div><div><dt class="lb">Time</dt><dd>3:00 PM to 8:00 PM</dd></div><div class="w2"><dt class="lb">Venue</dt><dd>Civil Lines, New Delhi</dd></div></dl>'
- +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>'+chip+'</span></div>'+acts+'</div><div id="pay" class="pay" hidden></div>'+note+dm}
+ +'<div class="ps"><span class="lb">Pass ID <b style="color:var(--cream)">'+esc(id)+'</b></span><span class="chip"><i></i>'+chip+'</span></div>'+grp+'</div>'
+ +(st==="due"?'<div class="pay" id="pay"></div>':"")+note+dm}
 function upiLink(id){return "upi://pay?pa="+encodeURIComponent(UPI.id)+"&pn="+encodeURIComponent(UPI.name)+"&am="+AMOUNT+"&cu=INR&tn="+encodeURIComponent(id+" Diwali Party")}
 function qrSvg(t){if(!window.qrcode)return"";var q=qrcode(0,"M");q.addData(t);q.make();var n=q.getModuleCount(),m=2,d="",r,c;for(r=0;r<n;r++)for(c=0;c<n;c++)if(q.isDark(r,c))d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z";var z=n+2*m;return '<svg viewBox="0 0 '+z+' '+z+'" shape-rendering="crispEdges" role="img" aria-label="UPI QR code for ₹'+AMOUNT+'"><rect width="'+z+'" height="'+z+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'}
 function payHtml(id,link,touch){var qr=qrSvg(link);
- return '<p class="lb">Pay ₹'+AMOUNT+' by UPI</p>'
+ return '<p class="lb">Pay ₹'+AMOUNT+' to confirm your pass</p>'
  +(qr?'<div class="qr">'+qr+'</div><p class="note">Scan with any UPI app.</p>':"")
- +(touch?'<a class="btn" style="margin-top:16px" href="'+esc(link)+'">Open UPI app</a>':"")
+ +(touch?'<a class="btn" href="'+esc(link)+'">Open UPI app</a>':"")
  +'<div class="upi"><span class="lb">UPI ID</span><b>'+esc(UPI.id)+'</b><button class="btn g s" type="button" id="cp">Copy</button></div>'
  +'<p class="note">Amount ₹'+AMOUNT+'. Put <b>'+esc(id)+'</b> in the remark.</p>'
- +'<form id="uf" class="uf" novalidate><label class="lb" for="ut">After paying: name on the account you paid from</label><input type="text" id="ut" placeholder="As shown in your UPI app" autocomplete="name"><p class="er" id="eut" role="alert" hidden></p><p class="note">We match this name to the payment to confirm your pass.</p><button class="btn" type="submit" id="ub">Confirm payment</button></form>'}
+ +'<p class="note">Any payment we cannot match to a pass is refunded in full.</p>'
+ +'<button class="btn" type="button" id="ipaid">I’ve paid, confirm my pass</button><p class="er" id="eip" role="alert" hidden></p>'}
 function sendPayer(p,n){if(!INVITE.lookup){DEMO.payer=n;return Promise.resolve()}return fetch(INVITE.lookup,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({phone:p,payer:n})})}
-function bindPay(d,p){var b=$("#payb");if(!b)return;
- var id=d.id||"DP-"+p.slice(-4),link=upiLink(id),touch=matchMedia("(pointer:coarse)").matches,box=$("#pay"),pb=false;
- b.onclick=function(){
-  if(!box.hidden){box.hidden=true;b.setAttribute("aria-expanded","false");return}
-  box.innerHTML=payHtml(id,link,touch);box.hidden=false;b.setAttribute("aria-expanded","true");
-  box.scrollIntoView({behavior:rm?"auto":"smooth",block:"nearest"});
-  var c=$("#cp");c.onclick=function(){function ok(){c.textContent="Copied";setTimeout(function(){c.textContent="Copy"},1600)}
-   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(UPI.id).then(ok,noop);else{var t=document.createElement("textarea");t.value=UPI.id;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){}t.remove()}};
-  $("#uf").onsubmit=function(ev){ev.preventDefault();if(pb)return;
-   var u=$("#ut").value.replace(/\s+/g," ").trim();
-   if(!/^[\p{L} .'-]{2,60}$/u.test(u)){err("ut","Enter the name on the account you paid from.");return}
-   err("ut","");pb=true;var bt=$("#ub");bt.textContent="Sending…";
-   sendPayer(p,u).then(function(){return look(p)}).then(function(d2){
-    if(d2&&d2.status==="approved"&&(d2.pay==="verifying"||d2.pay==="paid")){res.innerHTML=pass(d2,p);bindPay(d2,p);var e=res.querySelector(".diya");e&&e.classList.add("on")}
-    else throw 0;
-   }).catch(function(){pb=false;bt.textContent="Confirm payment";err("ut","Could not record that. Check your connection and try again.")})}}}
+function show(c,d,p){
+ c.innerHTML=pass(d,p);
+ var box=c.querySelector("#pay");
+ setTimeout(function(){var e=c.querySelector(".diya");e&&e.classList.add("on")},rm?0:300);
+ if(!box)return;
+ var id=d.id||"DP-"+p.slice(-4),link=upiLink(id),touch=matchMedia("(pointer:coarse)").matches,pb=false;
+ box.innerHTML=payHtml(id,link,touch);
+ var cp=box.querySelector("#cp");cp.onclick=function(){copyText(UPI.id,cp,"Copy")};
+ var ip=box.querySelector("#ipaid"),ee=box.querySelector("#eip");
+ ip.onclick=function(){if(pb)return;pb=true;ip.textContent="Sending…";ee.hidden=true;
+  sendPayer(p,"self-reported").then(function(){var d2={};for(var k in d)d2[k]=d[k];d2.pay="verifying";show(c,d2,p)}).catch(function(){pb=false;ip.textContent="I’ve paid, confirm my pass";ee.textContent="Could not record that. Check your connection and try again.";ee.hidden=false})}}
 var lbusy=false,res=$("#res");
 $("#lp").addEventListener("input",function(){res.innerHTML="";$("#pf").classList.remove("bad");err("lp","")});
 $("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
@@ -353,9 +355,8 @@ $("#lf").onsubmit=function(ev){ev.preventDefault();if(lbusy)return;
  if(!/^[6-9]\d{9}$/.test(p)){err("lp","Enter a valid 10-digit mobile number.");$("#pf").classList.add("bad");return}
  err("lp","");$("#pf").classList.remove("bad");lbusy=true;var b=$("#lb");b.textContent="Checking…";res.innerHTML="";
  look(p).then(function(d){var s=d&&d.status;
-  if(s==="approved"){res.innerHTML=pass(d,p);bindPay(d,p);setTimeout(function(){var e=res.querySelector(".diya");e&&e.classList.add("on")},700)}
-  else if(s==="pending")res.innerHTML=msg("Still under review.","We have your request. The Unrest team is still reviewing it. Check back soon with the same number.");
-  else if(s==="declined")res.innerHTML=msg("Not this time.","We could not approve this request. Contact the Unrest team if you think this is a mistake.");
+  if(s==="approved"||s==="pending")show(res,d,p);
+  else if(s==="declined")res.innerHTML=msg("Not this time.","We could not approve this request. Your payment, if any, is refunded in full. Contact the Unrest team if you think this is a mistake.");
   else res.innerHTML=msg("No request found.","Nothing under that number. Check the digits, or request your invite.",'<a href="#request">Request your invite</a>');
   res.focus({preventScroll:true});res.scrollIntoView({behavior:rm?"auto":"smooth",block:"center"})
  }).catch(function(){res.innerHTML=msg("Something broke.","Could not check right now. Check your connection and try again.")}).then(function(){lbusy=false;b.textContent="View my invite"})};
